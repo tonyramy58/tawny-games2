@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // الغرف: اللعبة بدون تسجيل دخول، فالقراءة والكتابة مسموحة بس بحدود
+    match /rooms/{room} {
+      allow read: if true;
+      allow create, update: if request.resource.data.keys().size() < 60;
+      allow delete: if false;
+      match /{sub=**} { allow read, write: if true; }
+    }
+    // النقاط والتحديات: إضافة وتعديل بس، ممنوع الحذف، وحجم الدوكيومنت محدود
+    match /scores/{id}  { allow read: if true; allow create, update: if request.resource.data.keys().size() < 40; allow delete: if false; }
+    match /scores2/{id} { allow read: if true; allow create, update: if request.resource.data.keys().size() < 40; allow delete: if false; }
+    match /daily/{d}/entries/{id}  { allow read: if true; allow create, update: if request.resource.data.keys().size() < 40; allow delete: if false; }
+    match /daily2/{d}/entries/{id} { allow read: if true; allow create, update: if request.resource.data.keys().size() < 40; allow delete: if false; }
+    match /pool/{id}    { allow read: if true; allow create, update: if request.resource.data.keys().size() < 40; allow delete: if false; }
+    match /varpool/{id} { allow read: if true; allow create, update: if request.resource.data.keys().size() < 40; allow delete: if false; }
+    match /reports/{id} { allow create: if true; allow read: if false; }
+    match /{other=**}   { allow read, write: if false; }
+  }
+}
