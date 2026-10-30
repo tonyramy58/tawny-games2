@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // الغرف: كل اللي جواها مسموح لأن اللعبة بدون تسجيل دخول (للعب مع الأصحاب)
+    match /rooms/{room} {
+      allow read, create, update: if true;
+      allow delete: if false;
+      match /{sub=**} { allow read, write: if true; }
+    }
+    match /scores/{id}  { allow read, write: if true; }
+    match /scores2/{id} { allow read, write: if true; }
+    match /daily/{d}/entries/{id} { allow read, write: if true; }
+    match /daily2/{d}/entries/{id} { allow read, write: if true; }
+    match /pool/{id}    { allow read, write: if true; }
+    match /varpool/{id} { allow read, write: if true; }
+    match /reports/{id} { allow create: if true; allow read: if false; }
+    match /{other=**}   { allow read, write: if false; }
+  }
+}
